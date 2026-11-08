@@ -1330,7 +1330,7 @@ function updateVisuals(dt) {
   for (let i = 0; i < truckObj.wheels.length; i++) {
     const w = truckObj.wheels[i];
     w.spin.rotation.x = wheelSpin;
-    if (i < 2) w.pivot.rotation.y = truck.wheelSteer;
+    if (i < 2) w.pivot.rotation.y = -truck.wheelSteer;
     const targetY = WHEEL_LOCALS[i].y + (truck.grounded ? 0 : -0.1);
     w.pivot.position.y += (targetY - w.pivot.position.y) * Math.min(1, dt * 12);
   }

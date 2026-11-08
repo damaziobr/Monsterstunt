@@ -188,13 +188,14 @@ export function stepTruck(t, input, dt) {
   }
 
   // direção: guinada controlada por esterço e velocidade.
+  // +estilo = direita na tela (a câmera olha para +Z, então direita = -X).
   // Aplicada depois das forças laterais para o atrito não anular a curva.
   if (contacts > 0) {
     const speedAbs = Math.abs(headingSpeed);
     let speedFactor = Math.min(speedAbs / 7, 1);
     if (gas && speedFactor < TURN_MIN_FACTOR) speedFactor = TURN_MIN_FACTOR;
     const direction = headingSpeed < -0.2 ? -1 : 1;
-    const targetYaw = t.wheelSteer * direction * TURN_RATE * speedFactor;
+    const targetYaw = -t.wheelSteer * direction * TURN_RATE * speedFactor;
     const response = Math.min(1, (5 + 9 * speedFactor) * dt);
     t.angVel.y += (targetYaw - t.angVel.y) * response;
   }
@@ -208,7 +209,7 @@ export function stepTruck(t, input, dt) {
       const target = -flip * FLIP_RATE;
       t.angVel.addScaledVector(_right, (target - current) * Math.min(1, 20 * dt));
     }
-    if (steerIn !== 0) _torque.y += steerIn * AIR_YAW;
+    if (steerIn !== 0) _torque.y -= steerIn * AIR_YAW;
   }
 
   const damp = contacts > 0 ? GROUND_DAMP : AIR_DAMP;
